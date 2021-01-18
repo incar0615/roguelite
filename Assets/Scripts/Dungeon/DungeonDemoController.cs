@@ -64,7 +64,7 @@ namespace P1
                 generator.randomSeed = -1;
             }
 
-            generator.ProceedGenerate();
+            generator.ProceedGenerateOnDemoScene();
 
  
             seedDisplayText.text = "현재 시드 값\n" + generator.randomSeed.ToString();

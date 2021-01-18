@@ -105,9 +105,17 @@ namespace P1
             Init();
             GenerateDungeon(mapSize);
 
-            //DisplayMap();
             InstantiateRooms();
         }
+
+        public void ProceedGenerateOnDemoScene()
+        {
+            Init();
+            GenerateDungeon(mapSize);
+
+            DisplayMap();
+        }
+
 
         void InstantiateRooms()
         {
