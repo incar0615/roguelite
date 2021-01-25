@@ -6,9 +6,8 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class Rune
+        public class ArtifactItem : ItemBase
         {
         }
-
     }
 }

@@ -11,8 +11,8 @@ namespace P1
             private int magicId;
             public int MagicId { get { return magicId; } set { magicId = value; } }
 
-            private List<Rune> runeList;
-            public List<Rune> RuneList { get { return runeList; } set { runeList = value; } }
+            private List<RuneItem> runeList;
+            public List<RuneItem> RuneList { get { return runeList; } set { runeList = value; } }
 
             public override void Use(GameObject ownerObj, Vector3 dir)
             {

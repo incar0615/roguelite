@@ -9,13 +9,13 @@ namespace P1
         public class Inventory
         {
             List<EquipmentItem> equipmentList;
-            List<Artifact> artifactList;
-            List<Rune> runeList;
+            List<ArtifactItem> artifactList;
+            List<RuneItem> runeList;
             Dictionary<EquipPart, EquipmentItem> equippedItemDict;
 
             public Inventory(List<EquipmentItem> equipmentItems, 
-                List<Artifact> artifacts, 
-                List<Rune> runes, 
+                List<ArtifactItem> artifacts, 
+                List<RuneItem> runes, 
                 Dictionary<EquipPart, EquipmentItem> equippedItems)
             {
                 equipmentList = equipmentItems;
