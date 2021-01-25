@@ -8,40 +8,24 @@ namespace P1
     {
         public class TempMagic : Magic
         {
-            // 접근한정자 나중에 수정
-            public int id;
-            public string name;
-            public float projectileSpeed;
-            public float maxTravelDist;
-            public float atkDelay;
-            public string element;
-            public List<ProjectileModifiers> runes;
+            int cnt = 0;
 
-            // FIXME 
-            public TempMagic(int id, string name, float projectileSpeed, 
-                float maxTravelDist, float atkDelay, string element)
+            public TempMagic()
             {
-                this.id = id;
-                this.name = name;
-                this.projectileSpeed = projectileSpeed;
-                this.maxTravelDist = maxTravelDist;
-                this.atkDelay = atkDelay;
-                this.element = element;
 
-                runes = new List<ProjectileModifiers>();
             }
 
-            public void SetRune(List<ProjectileModifiers> _runes)
+            public override void Use(GameObject ownerObj, Vector3 dir)
             {
-                foreach(var rune in _runes)
-                {
-                    runes.Add(rune);
-                }
-            }
+                Debug.Log("cnt = " + (cnt++));
+                var bullet = PoolManager.GetProjectileObject();
 
-            public virtual void Use(GameObject ownerObj, Vector3 dir)
-            {
-
+                bullet.GetAttackData().Atk = 4; // FIXME. 임시코드
+                bullet.MaxTravelDist = 10.0f;
+                bullet.ProjectileSpeed = 3.0f;
+                
+                bullet.transform.position = ownerObj.transform.position + dir.normalized * 0.1f;
+                bullet.Shoot(dir.normalized);
             }
         }
 
