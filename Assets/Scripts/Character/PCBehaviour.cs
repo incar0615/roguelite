@@ -40,10 +40,9 @@ namespace P1
             sprRenderer = GetComponent<SpriteRenderer>();
 
             // TODO 임시 코드 
-            inventory = new Inventory(new List<EquipmentItem>(), new List<Artifact>(), new List<Rune>(), new Dictionary<EquipPart, EquipmentItem>()); ;
+            inventory = new Inventory(new List<EquipmentItem>(), new List<ArtifactItem>(), new List<RuneItem>(), new Dictionary<EquipPart, EquipmentItem>()); ;
 
-            Magic magic = new Magic(5757, "기본마법", 10.0f, 12.0f, 1.0f, "none");
-            Bracelet bracelet = new Bracelet(magic, new List<Rune>(), EquipPart.Bracelet_Left);
+            Bracelet bracelet = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
 
             inventory.SetEquippedItem(bracelet);
         }
@@ -71,7 +70,7 @@ namespace P1
 
         public void Attack(Vector3 dir)
         {
-            UseLeftBracelet();
+            UseLeftBracelet(dir);
 
             /*var bullet = PoolManager.GetProjectileObject();
 
@@ -81,9 +80,9 @@ namespace P1
             bullet.Shoot(dir.normalized, magics[currentMagic]);*/
         }
 
-        public void UseLeftBracelet()
+        public void UseLeftBracelet(Vector3 dir)
         {
-            inventory.GetEquippedItem(EquipPart.Bracelet_Left);
+            inventory.GetEquippedItem(EquipPart.Bracelet_Left).Use(gameObject, dir);
         }
 
         void FixedUpdate()

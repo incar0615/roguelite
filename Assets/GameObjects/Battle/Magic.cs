@@ -6,7 +6,7 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class Magic
+        public abstract class Magic
         {
             // 접근한정자 나중에 수정
             public int id;
@@ -17,32 +17,7 @@ namespace P1
             public string element;
             public List<ProjectileModifiers> runes;
 
-            // FIXME 
-            public Magic(int id, string name, float projectileSpeed, 
-                float maxTravelDist, float atkDelay, string element)
-            {
-                this.id = id;
-                this.name = name;
-                this.projectileSpeed = projectileSpeed;
-                this.maxTravelDist = maxTravelDist;
-                this.atkDelay = atkDelay;
-                this.element = element;
-
-                runes = new List<ProjectileModifiers>();
-            }
-
-            public void SetRune(List<ProjectileModifiers> _runes)
-            {
-                foreach(var rune in _runes)
-                {
-                    runes.Add(rune);
-                }
-            }
-
-            public virtual void Use(GameObject ownerObj, Vector3 dir)
-            {
-
-            }
+            public abstract void Use(GameObject ownerObj, Vector3 dir);
         }
 
     }
