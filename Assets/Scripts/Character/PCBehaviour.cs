@@ -20,15 +20,7 @@ namespace P1
         public float runSpeed = 5.0f;
 
         public Player playerData;
-        public List<Magic> magics;
-
-        // FIXME. 임시 코드
-        public int currentMagic = 0;
-
-        public ProjectileModifiers[] tempMods;
-        // 임시. 추후에 마법 정보의 것으로 교체 
-        [SerializeField]
-        private float projectileSpeed = 5.0f;
+        public Inventory inventory;
 
         public override Character GetCharData()
         {
@@ -47,18 +39,13 @@ namespace P1
             rigidBody = GetComponent<Rigidbody2D>();
             sprRenderer = GetComponent<SpriteRenderer>();
 
-            magics = new List<Magic>();
+            // TODO 임시 코드 
+            inventory = new Inventory(new List<EquipmentItem>(), new List<Artifact>(), new List<Rune>(), new Dictionary<EquipPart, EquipmentItem>()); ;
 
-            // TODO 임시코드
-            Magic magic = new Magic(5757, "기본마법", 10.0f, 12.0f,1.0f, "none");
+            Magic magic = new Magic(5757, "기본마법", 10.0f, 12.0f, 1.0f, "none");
+            Bracelet bracelet = new Bracelet(magic, new List<Rune>(), EquipPart.Bracelet_Left);
 
-            List<ProjectileModifiers> runes = new List<ProjectileModifiers>();
-            foreach(var rune in tempMods)
-            {
-                runes.Add(rune);
-            }
-            magic.SetRune(runes);
-            magics.Add(magic);
+            inventory.SetEquippedItem(bracelet);
         }
 
         // Update is called once per frame
@@ -84,12 +71,19 @@ namespace P1
 
         public void Attack(Vector3 dir)
         {
-            var bullet = PoolManager.GetProjectileObject();
+            UseLeftBracelet();
+
+            /*var bullet = PoolManager.GetProjectileObject();
 
             bullet.GetAttackData().Atk = 4; // FIXME. 임시코드
 
             bullet.transform.position = transform.position + dir.normalized * 0.1f;
-            bullet.Shoot(dir.normalized, magics[currentMagic]);
+            bullet.Shoot(dir.normalized, magics[currentMagic]);*/
+        }
+
+        public void UseLeftBracelet()
+        {
+            inventory.GetEquippedItem(EquipPart.Bracelet_Left);
         }
 
         void FixedUpdate()

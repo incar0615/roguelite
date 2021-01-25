@@ -6,7 +6,7 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class Magic
+        public class TempMagic : Magic
         {
             // 접근한정자 나중에 수정
             public int id;
@@ -18,7 +18,7 @@ namespace P1
             public List<ProjectileModifiers> runes;
 
             // FIXME 
-            public Magic(int id, string name, float projectileSpeed, 
+            public TempMagic(int id, string name, float projectileSpeed, 
                 float maxTravelDist, float atkDelay, string element)
             {
                 this.id = id;
