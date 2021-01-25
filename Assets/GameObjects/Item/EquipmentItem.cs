@@ -6,7 +6,7 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class EquipmentItem : ItemBase
+        public abstract class EquipmentItem : ItemBase
         {
             private EquipPart equipPart;
             public EquipPart EquipPart { get { return equipPart; } set { equipPart = value; } }

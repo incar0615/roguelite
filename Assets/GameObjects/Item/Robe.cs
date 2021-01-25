@@ -8,6 +8,9 @@ namespace P1
     {
         public class Robe : EquipmentItem
         {
+            public override void Use(GameObject ownerObj, Vector3 dir)
+            {
+            }
         }
 
     }

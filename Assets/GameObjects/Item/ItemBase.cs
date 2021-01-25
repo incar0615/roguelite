@@ -6,7 +6,7 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class ItemBase
+        public abstract class ItemBase
         {
             private int itemID = 0;
             public int ItemID { get { return itemID; } set { itemID = value; } }
