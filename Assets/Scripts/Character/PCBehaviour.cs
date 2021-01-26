@@ -8,7 +8,6 @@ namespace P1
     using GameObjects;
     public class PCBehaviour : CharacterBehaviour
     {
-
         private Camera mainCam;
         private Rigidbody2D rigidBody;
         private SpriteRenderer sprRenderer;
@@ -19,22 +18,31 @@ namespace P1
         public float moveLimiter = 0.71f; // 대각선 이동속도 제한
         public float runSpeed = 5.0f;
 
-        public Player playerData;
-        public Inventory inventory;
-
+        private Player playerData;
         public override Character GetCharData()
         {
             return playerData;
         }
+
+        public Inventory inventory;
 
         private void OnEnable()
         {
             
         }
 
+        void InitPlayerData()
+        {
+            playerData = new Player();
+            playerData.MaxHp = 100;
+            playerData.IsMovable = true;
+            playerData.MoveSpeed = runSpeed;
+        }
         // Start is called before the first frame update
         void Start()
         {
+            InitPlayerData();
+
             mainCam = Camera.main;
             rigidBody = GetComponent<Rigidbody2D>();
             sprRenderer = GetComponent<SpriteRenderer>();
@@ -43,8 +51,9 @@ namespace P1
             inventory = new Inventory(new List<EquipmentItem>(), new List<ArtifactItem>(), new List<RuneItem>(), new Dictionary<EquipPart, EquipmentItem>()); ;
 
             Bracelet bracelet = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
-
+            DashRobe robe = new DashRobe(); 
             inventory.SetEquippedItem(bracelet);
+            inventory.SetEquippedItem(robe);
         }
 
         // Update is called once per frame
@@ -112,7 +121,15 @@ namespace P1
                 vertical *= moveLimiter;
             }
 
-            rigidBody.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed);
+            if (playerData.IsMovable)
+            {
+                rigidBody.velocity = new Vector2(horizontal * playerData.MoveSpeed, vertical * playerData.MoveSpeed);
+            }
+            else
+            {
+                rigidBody.velocity = Vector2.zero;
+            }
+            
         }
 
         public void Damaged(float dmg)
