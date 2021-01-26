@@ -6,10 +6,11 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class Robe : EquipmentItem
+        public abstract class Scroll : EquipmentItem
         {
             public override void Use(GameObject ownerObj, Vector3 dir)
             {
+                Debug.Log("Use Scroll");
             }
         }
 

@@ -11,10 +11,7 @@ namespace P1
             private EquipPart equipPart;
             public EquipPart EquipPart { get { return equipPart; } set { equipPart = value; } }
 
-            public virtual void Use(GameObject ownerObj, Vector3 dir)
-            {
-
-            }
+            public abstract void Use(GameObject ownerObj, Vector3 dir);
         }
     }
 }
