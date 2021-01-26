@@ -58,7 +58,37 @@ namespace P1
                 if (hitResult.collider != null)
                 {
                     var direction = new Vector3(hitResult.point.x, hitResult.point.y) - transform.position;
-                    Attack(direction);
+                    UseEquippedItem(EquipPart.Bracelet_Left, direction);
+                }
+            }
+            else if(Input.GetMouseButtonDown(1))
+            {
+                Ray2D ray = new Ray2D(mainCam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                RaycastHit2D hitResult = Physics2D.Raycast(ray.origin, ray.direction);
+                if (hitResult.collider != null)
+                {
+                    var direction = new Vector3(hitResult.point.x, hitResult.point.y) - transform.position;
+                    UseEquippedItem(EquipPart.Bracelet_Right, direction);
+                }
+            }
+            else if(Input.GetKeyDown(KeyCode.Space))
+            {
+                Ray2D ray = new Ray2D(mainCam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                RaycastHit2D hitResult = Physics2D.Raycast(ray.origin, ray.direction);
+                if (hitResult.collider != null)
+                {
+                    var direction = new Vector3(hitResult.point.x, hitResult.point.y) - transform.position;
+                    UseEquippedItem(EquipPart.Robe, direction);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Ray2D ray = new Ray2D(mainCam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                RaycastHit2D hitResult = Physics2D.Raycast(ray.origin, ray.direction);
+                if (hitResult.collider != null)
+                {
+                    var direction = new Vector3(hitResult.point.x, hitResult.point.y) - transform.position;
+                    UseEquippedItem(EquipPart.Scroll, direction);
                 }
             }
 
@@ -68,21 +98,9 @@ namespace P1
 
         }
 
-        public void Attack(Vector3 dir)
+        public void UseEquippedItem(EquipPart part, Vector3 dir)
         {
-            UseLeftBracelet(dir);
-
-            /*var bullet = PoolManager.GetProjectileObject();
-
-            bullet.GetAttackData().Atk = 4; // FIXME. 임시코드
-
-            bullet.transform.position = transform.position + dir.normalized * 0.1f;
-            bullet.Shoot(dir.normalized, magics[currentMagic]);*/
-        }
-
-        public void UseLeftBracelet(Vector3 dir)
-        {
-            inventory.GetEquippedItem(EquipPart.Bracelet_Left).Use(gameObject, dir);
+            inventory.GetEquippedItem(part).Use(gameObject, dir);
         }
 
         void FixedUpdate()
