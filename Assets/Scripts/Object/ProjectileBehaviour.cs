@@ -65,6 +65,21 @@ namespace P1
             travelDist = 0;
         }
 
+        public void Shoot(Vector3 direction, float maxTravelDist = -1, int depth = 0)
+        {
+            initSelf();
+
+            this.direction = direction;
+
+            /*this.magic = magic;
+
+            this.projectileSpeed = magic.projectileSpeed;
+            this.maxTravelDist = magic.maxTravelDist;
+            this.depth = depth;
+            this.maxTravelDist = (maxTravelDist != -1) ? maxTravelDist : magic.maxTravelDist;*/
+
+            Debug.Log(this.maxTravelDist);
+        }
         public void Shoot(Vector3 direction, GameObjects.Magic magic, float maxTravelDist = -1, int depth = 0)
         {
             initSelf();
