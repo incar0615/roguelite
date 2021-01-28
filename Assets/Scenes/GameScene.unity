@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 145620936}
   - component: {fileID: 145620939}
   - component: {fileID: 145620940}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Character
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -203,9 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveLimiter: 0.7
   runSpeed: 10
-  currentMagic: 0
-  tempMods: 010000000300000004000000
-  projectileSpeed: 10
 --- !u!212 &145620937
 SpriteRenderer:
   m_ObjectHideFlags: 0
