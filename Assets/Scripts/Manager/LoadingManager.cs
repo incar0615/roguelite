@@ -23,6 +23,11 @@ namespace P1
             }
         }
 
+        /// <summary>
+        /// sceneName 씬을 로딩
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <param name="mode"></param>
         public static void LoadScene(string sceneName, LoadSceneMode mode = LoadSceneMode.Single)
         {
             nextSceneName = sceneName;
@@ -30,9 +35,16 @@ namespace P1
             SceneManager.LoadScene("LoadingScene");
         }
 
+        /// <summary>
+        /// 로딩씬이 로드 되어 있을 경우 언로드
+        /// </summary>
         public static void UnloadLoadingScene()
         {
-            SceneManager.UnloadSceneAsync("LoadingScene");
+            
+            if(SceneManager.GetSceneByName("LoadingScene").isLoaded)
+            {
+                SceneManager.UnloadSceneAsync("LoadingScene");
+            }
         }
 
         public void LoadSceneAsync(string sceneName, LoadSceneMode mode)
