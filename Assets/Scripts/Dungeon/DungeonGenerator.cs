@@ -106,6 +106,8 @@ namespace P1
             GenerateDungeon(mapSize);
 
             InstantiateRooms();
+
+            LoadingManager.UnloadLoadingScene();
         }
 
         public void ProceedGenerateOnDemoScene()
