@@ -100,7 +100,14 @@ namespace P1
                     UseEquippedItem(EquipPart.Scroll, direction);
                 }
             }
-
+            // TODO. 체력바 UI 확인용 임시 코드 
+            else if(Input.GetKeyDown(KeyCode.F))
+            {
+                int maxHp = Random.Range(10, 100);
+                int curHp = Random.Range(1, maxHp);
+                HpChangedEvent e = new HpChangedEvent(maxHp, curHp);
+                EventManager.Instance.Raise(e);
+            }
             // 이동 관련
             horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
             vertical = Input.GetAxisRaw("Vertical"); // -1 is down
