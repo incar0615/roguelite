@@ -108,6 +108,17 @@ namespace P1
                 HpChangedEvent e = new HpChangedEvent(maxHp, curHp);
                 EventManager.Instance.Raise(e);
             }
+            // TODO. 스킬 쿨타임 UI 확인용 임시 코드 
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                SkillUsedEvent e = new SkillUsedEvent(EquipPart.Bracelet_Left, 1);
+                EventManager.Instance.Raise(e);
+            }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                SkillUsedEvent e = new SkillUsedEvent(EquipPart.Bracelet_Right, 5);
+                EventManager.Instance.Raise(e);
+            }
             // 이동 관련
             horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
             vertical = Input.GetAxisRaw("Vertical"); // -1 is down
