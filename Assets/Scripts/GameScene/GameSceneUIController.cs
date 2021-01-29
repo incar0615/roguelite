@@ -15,18 +15,22 @@ namespace P1
         public Text gemText;
         public Text contractText;
 
-        public Image leftMagicImg;
-        public Image rightMagicImg;
+        public Image leftMagicIconImg;
+        public Image leftMagicIconProgressImg;
+        public Image rightMagicIconImg;
+        public Image rightMagicIconProgressImg;
 
         public Image scrollMagicIcon;
         public Image scrollMagicProgressImg;
 
 
         Coroutine hpChangedCoroutine;
+        Dictionary<EquipPart, Coroutine> skillCoroutineDict = new Dictionary<EquipPart, Coroutine>();
         Coroutine skillUsedCoroutine;
         public override void SubscribeEvents()
         {
             EventManager.Instance.AddListener<HpChangedEvent>(OnHpChanged);
+            EventManager.Instance.AddListener<SkillUsedEvent>(OnSkillUsed);
         }
 
         public override void UnsubscribeEvents()
@@ -35,17 +39,20 @@ namespace P1
         }
         #region HpChanged
         // HpChanged
-        void OnHpChanged(HpChangedEvent e)
+        void OnHpChanged(HpChangedEvent hce)
         {
-            hpChangedCoroutine = StartCoroutine(HpChangedRoutine(e));   
+            if (hpChangedCoroutine != null) StopCoroutine(hpChangedCoroutine);
+
+            hpChangedCoroutine = StartCoroutine(HpChangedRoutine(hce));   
         }
 
-        IEnumerator HpChangedRoutine(HpChangedEvent e)
+        IEnumerator HpChangedRoutine(HpChangedEvent hce)
         {
             yield return null;
 
-            float maxHp = e.maxHp;
-            float curHp = e.curHp;
+            // TODO. 연출 추가 
+            float maxHp = hce.maxHp;
+            float curHp = hce.curHp;
 
             hpText.text = curHp + " / " + maxHp;
 
@@ -54,17 +61,52 @@ namespace P1
         #endregion
 
         #region SkillUsed
-        void OnSkillUsed()
+        void OnSkillUsed(SkillUsedEvent sue)
         {
-
+            EquipPart ep = sue.skillPart;
+            if (ep == EquipPart.Bracelet_Left ||
+                ep == EquipPart.Bracelet_Right)
+            {
+                if (skillCoroutineDict.ContainsKey(ep)) StopCoroutine(skillCoroutineDict[ep]);
+                skillCoroutineDict[ep] = StartCoroutine(BraceletSkillRoutine(sue));
+                
+            }
+            else if(ep == EquipPart.Scroll)
+            {
+                if (skillCoroutineDict.ContainsKey(ep)) StopCoroutine(skillCoroutineDict[ep]);
+                //skillCoroutineDict[ep] = StartCoroutine(ScrollSkillRoutine(sue));
+            }
+            else if(ep == EquipPart.Robe)
+            {
+                if (skillCoroutineDict.ContainsKey(ep)) StopCoroutine(skillCoroutineDict[ep]);
+                //skillCoroutineDict[ep] = StartCoroutine(RobeSkillRoutine(sue));
+            }
         }
 
+        IEnumerator BraceletSkillRoutine(SkillUsedEvent sue)
+        {
+            yield return null;
+
+            EquipPart ep = sue.skillPart;
+            float cooldown = sue.cooldown;
+            Image progressImg = (ep == EquipPart.Bracelet_Left ? leftMagicIconProgressImg : rightMagicIconProgressImg);
+
+            while (cooldown > 0)
+            {
+                progressImg.fillAmount = cooldown / sue.cooldown;
+                cooldown -= Time.deltaTime;
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            progressImg.fillAmount = 0.0f;
+        }
         #endregion
 
         // Start is called before the first frame update
         void Start()
         {
-
+            
         }
 
 

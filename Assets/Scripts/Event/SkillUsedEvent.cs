@@ -10,8 +10,8 @@ namespace P1
     /// </summary>
     public class SkillUsedEvent : MessageEvent
     {
-        EquipPart skillPart;
-        float cooldown;
+        public EquipPart skillPart;
+        public float cooldown;
 
         public SkillUsedEvent(EquipPart skillPart, float cooldown)
         {
