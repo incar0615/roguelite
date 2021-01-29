@@ -36,8 +36,8 @@ namespace P1
         }
         private static EventManager instance = null;
 
-        public delegate void EventDelegate<T>(T e) where T : Event;
-        private delegate void EventDelegate(Event e);
+        public delegate void EventDelegate<T>(T e) where T : MessageEvent;
+        private delegate void EventDelegate(MessageEvent e);
 
         /// <summary>
         /// The actual delegate, there is one delegate per unique event. Each
@@ -53,7 +53,7 @@ namespace P1
         /// <summary>
         /// Add the delegate.
         /// </summary>
-        public void AddListener<T>(EventDelegate<T> del) where T : Event
+        public void AddListener<T>(EventDelegate<T> del) where T : MessageEvent
         {
 
             if (delegateLookup.ContainsKey(del))
@@ -80,7 +80,7 @@ namespace P1
         /// <summary>
         /// Remove the delegate. Can be called multiple times on same delegate.
         /// </summary>
-        public void RemoveListener<T>(EventDelegate<T> del) where T : Event
+        public void RemoveListener<T>(EventDelegate<T> del) where T : MessageEvent
         {
 
             EventDelegate internalDelegate;
@@ -113,7 +113,7 @@ namespace P1
         /// <summary>
         /// Raise the event to all the listeners
         /// </summary>
-        public void Raise(Event e)
+        public void Raise(MessageEvent e)
         {
             EventDelegate del;
             if (delegates.TryGetValue(e.GetType(), out del))

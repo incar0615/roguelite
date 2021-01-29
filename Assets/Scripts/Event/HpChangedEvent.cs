@@ -8,7 +8,7 @@ namespace P1
     /// <summary>
     /// Base event for all EventManager events.
     /// </summary>
-    public class HpChangedEvent : Event
+    public class HpChangedEvent : MessageEvent
     {
         public float maxHp;
         public float curHp;

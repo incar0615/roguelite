@@ -7,7 +7,7 @@ namespace P1
     /// <summary>
     /// Base event for all EventManager events.
     /// </summary>
-    public class Event
+    public class MessageEvent
     {
         /// <summary>
         /// Events with Handled==false are requests for action.  If Handled==true
