@@ -44,8 +44,6 @@ namespace P1
         {
             yield return null;
 
-            BattleObject objectData = e.objectData;
-
             float maxHp = e.maxHp;
             float curHp = e.curHp;
 

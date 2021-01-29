@@ -10,9 +10,14 @@ namespace P1
     /// </summary>
     public class HpChangedEvent : Event
     {
-        public BattleObject objectData;
         public float maxHp;
         public float curHp;
+
+        public HpChangedEvent(float maxHp, float curHp)
+        {
+            this.maxHp = maxHp;
+            this.curHp = curHp;
+        }
     }
 
 }
