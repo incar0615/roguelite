@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 namespace P1
 {
     using GameObjects;
+
     public class PCBehaviour : CharacterBehaviour
     {
         private Camera mainCam;
         private Rigidbody2D rigidBody;
         private SpriteRenderer sprRenderer;
+
+        private Vector3 mouseInWorldSpace;
 
         private float horizontal;
         private float vertical;
@@ -25,6 +28,11 @@ namespace P1
         }
 
         public Inventory inventory;
+
+        [field: SerializeField]
+        public UnityEvent<Vector2> OnMovementKeyPressed { get; set; }
+        [field: SerializeField]
+        public UnityEvent<Vector2> OnPointerPositionChange { get; set; }
 
         private void OnEnable()
         {
@@ -105,6 +113,9 @@ namespace P1
             horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
             vertical = Input.GetAxisRaw("Vertical"); // -1 is down
 
+            // 이동방향키 입력 이벤트 전달
+            OnMovementKeyPressed?.Invoke(new Vector2(horizontal, vertical));
+            GetPointerInput();
         }
 
         public void UseEquippedItem(EquipPart part, Vector3 dir)
@@ -157,6 +168,11 @@ namespace P1
             }
         }
 
+        // 마우스 위치 이벤트 전달
+        private void GetPointerInput()
+        {
+            mouseInWorldSpace = mainCam.ScreenToWorldPoint(Input.mousePosition);
+            OnPointerPositionChange?.Invoke(mouseInWorldSpace);
+        }
     }
-
 }
