@@ -15,6 +15,7 @@ namespace P1.UI
         int itemId;
         [SerializeField]
         bool isEquipped = false;
+        public bool IsEquipped { get => isEquipped; }
 
         public ItemBase item;
         public Image equipImg;

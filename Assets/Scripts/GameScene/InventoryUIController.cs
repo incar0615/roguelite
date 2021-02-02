@@ -17,6 +17,7 @@ namespace P1
 
         public List<InventorySlot> inventorySlotList;
 
+        // TODO. 아이템 타입 추가시 여기도 추가 해야함
         private static readonly Dictionary<string, Type> invenStrCatDict = new Dictionary<string, Type>()
             {
                 { "All", typeof(ItemBase) },
@@ -72,8 +73,13 @@ namespace P1
 
         void OnItemGetEvent(ItemGetEvent ige)
         {
-            InsertItem(ige.item);
+            AddItem(ige.item);
         }
+
+        void OnItemRemoveEvent(ItemRemoveEvent ire)
+        {
+            RemoveItem(ire.item);
+        }    
         #endregion
 
         void Update()
@@ -85,18 +91,31 @@ namespace P1
         }
         
 
-        public void InsertItem(ItemBase item)
+        public void AddItem(ItemBase item)
         {
-            // TODO
+            // TODO 카운트에 따른 GridGroup 변경 코드 추가해야함
             InventorySlot newSlot = Instantiate(InventorySlotPrefap, inventoryGrid.transform).GetComponent<InventorySlot>();
             newSlot.item = item;
-            inventorySlotList.Add(newSlot.GetComponent<InventorySlot>());
+            inventorySlotList.Add(newSlot);
+        }
+
+        public void RemoveItem(ItemBase item)
+        {
+            // TODO 카운트에 따른 GridGroup 변경 코드 추가해야함
+            InventorySlot removeSlot = Instantiate(InventorySlotPrefap, inventoryGrid.transform).GetComponent<InventorySlot>();
+            removeSlot.item = item;
+
+            if(removeSlot.IsEquipped)
+            {
+                Inventory.Instance.UnequipItem(removeSlot.item as EquipmentItem, false);
+            }
+            inventorySlotList.Remove(removeSlot);
         }
 
         /// <summary>
-        /// 하드코딩 부분 주의
+        /// !!! 하드코딩 부분 주의 !!!
         /// tg object name을 카테고리로 사용하기 때문에 gameObject Name에 주의 해야함
-        /// TODO. 추후에 좋은 아이디어 있으면 수정
+        /// FIXME. 추후에 좋은 아이디어 있으면 수정
         /// </summary>
         /// <param name="tg"></param>
         public void CategorySelected(Toggle tg)
@@ -123,26 +142,6 @@ namespace P1
                         slot.enabled = false;
                     }
                 }
-            }
-
-
-            switch (cat)
-            {
-                case "All":
-                    for(int i = 0; i < inventoryGrid.transform.childCount; i++)
-                    {
-                        inventoryGrid.transform.GetChild(i).gameObject.SetActive(true);
-                    }
-                    break;
-                case "Bracelet":
-                    
-                    break;
-                case "Robe":
-                    break;
-                case "Rune":
-                    break;
-                case "Scroll":
-                    break;
             }
         }
     }

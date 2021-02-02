@@ -40,6 +40,16 @@ namespace P1
 
                 // XXX. FieldItem 인스턴스나, 상점에서 구입시 메시지 호출하는게 나을지도? 
                 // 수정시 InventoryUIController 순서 생각하고 수정해야함
+                // 수정 할거면 RemoveItem도 같이 수정
+                EventManager.Instance.Raise(new ItemGetEvent(item));
+            }
+
+            public void RemoveItem(ItemBase item)
+            {
+                itemList.Remove(item);
+ 
+                // 수정시 InventoryUIController 순서 생각하고 수정해야함
+                // 수정 할거면 GetItem 같이 수정
                 EventManager.Instance.Raise(new ItemGetEvent(item));
             }
 
@@ -98,15 +108,21 @@ namespace P1
                 EventManager.Instance.Raise(new ItemEquipEvent(item.EquipPart, item, unequipment));
             }
 
-            public void UnequipItem(EquipPart part)
+            /// <summary>
+            /// 아이템 해제
+            /// 아이템이 제거되면서 장비가 해제될 때는 raiseEvent를 false로  
+            /// </summary>
+            /// <param name="item"></param>
+            /// <param name="raiseEvent"></param>
+            public void UnequipItem(EquipmentItem item, bool raiseEvent = true)
             {
                 EquipmentItem unequippedItem;
-                if (equippedItemDict.TryGetValue(part, out unequippedItem))
+                if (equippedItemDict.TryGetValue(item.EquipPart, out unequippedItem))
                 {
-                    equippedItemDict[part] = null;
+                    equippedItemDict[item.EquipPart] = null;
                 }
 
-                EventManager.Instance.Raise(new ItemEquipEvent(part, null, unequippedItem));
+                EventManager.Instance.Raise(new ItemEquipEvent(unequippedItem.EquipPart, null, unequippedItem));
             }
         }
 
