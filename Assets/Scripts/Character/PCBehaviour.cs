@@ -21,6 +21,7 @@ namespace P1
         public float runSpeed = 5.0f;
 
         private Player playerData;
+
         public override Character GetCharData()
         {
             return playerData;
@@ -64,6 +65,12 @@ namespace P1
         // Update is called once per frame
         void Update()
         {
+            InputCommand();
+
+        }
+
+        void InputCommand()
+        {
             // 투사체 발사
             if (Input.GetMouseButtonDown(0))
             {
@@ -75,7 +82,7 @@ namespace P1
                     UseEquippedItem(EquipPart.Bracelet_Left, direction);
                 }
             }
-            else if(Input.GetMouseButtonDown(1))
+            else if (Input.GetMouseButtonDown(1))
             {
                 Ray2D ray = new Ray2D(mainCam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
                 RaycastHit2D hitResult = Physics2D.Raycast(ray.origin, ray.direction);
@@ -85,7 +92,7 @@ namespace P1
                     UseEquippedItem(EquipPart.Bracelet_Right, direction);
                 }
             }
-            else if(Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
                 Ray2D ray = new Ray2D(mainCam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
                 RaycastHit2D hitResult = Physics2D.Raycast(ray.origin, ray.direction);
@@ -106,7 +113,7 @@ namespace P1
                 }
             }
             // TODO. 체력바 UI 확인용 임시 코드 
-            else if(Input.GetKeyDown(KeyCode.F))
+            else if (Input.GetKeyDown(KeyCode.F))
             {
                 int maxHp = Random.Range(10, 100);
                 int curHp = Random.Range(1, maxHp);
@@ -124,15 +131,19 @@ namespace P1
                 SkillUsedEvent e = new SkillUsedEvent(EquipPart.Bracelet_Right, 5);
                 EventManager.Instance.Raise(e);
             }
+            else if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                InventoryUIController.Instance.SwitchActiveInventoryUI();
+            }
+
             // 이동 관련
             horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
             vertical = Input.GetAxisRaw("Vertical"); // -1 is down
-
         }
 
         public void UseEquippedItem(EquipPart part, Vector3 dir)
         {
-            Inventory.Instance.GetEquippedItem(part).Use(gameObject, dir);
+            Inventory.Instance.GetEquippedItem(part)?.Use(gameObject, dir);
         }
 
         void FixedUpdate()
