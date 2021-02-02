@@ -12,9 +12,26 @@ namespace P1
 
     public class InventoryUIController : EventHandler
     {
+        #region singleton
+        public static InventoryUIController Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = FindObjectOfType<InventoryUIController>();
+                    if(!instance) Debug.LogError("InventoryUI가 씬에 없음");
+                }
+
+                return instance;
+            }
+        }
+        private static InventoryUIController instance = null;
+        #endregion
+
+        public GameObject InventoryUI;
         public GridLayoutGroup inventoryGrid;
         public GameObject InventorySlotPrefap;
-
         public List<InventorySlot> inventorySlotList;
 
         // TODO. 아이템 타입 추가시 여기도 추가 해야함
@@ -22,9 +39,9 @@ namespace P1
             {
                 { "All", typeof(ItemBase) },
                 { "Bracelet", typeof(Bracelet) },
-                { "Robe", typeof(Robe)  },
+                { "Robe", typeof(RobeBase)  },
                 { "Rune", typeof(RuneItem) },
-                { "Scroll", typeof(Scroll) },
+                { "Scroll", typeof(ScrollBase) },
             };
 
         #region Events
@@ -84,12 +101,17 @@ namespace P1
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            // TODO. 임시코드 
+            if (Input.GetMouseButtonDown(1))
             {
                EventManager.Instance.Raise(new ItemGetEvent(new DashRobe()));
             }
         }
-        
+
+        public void SwitchActiveInventoryUI()
+        {
+            InventoryUI.SetActive(!InventoryUI.activeSelf);
+        }
 
         public void AddItem(ItemBase item)
         {
@@ -133,13 +155,13 @@ namespace P1
             {
                 foreach(InventorySlot slot in inventorySlotList)
                 {
-                    if(slot.item.GetType() == t || slot.item.GetType().IsSubclassOf(t))
+                    if (slot.item.GetType() == t || slot.item.GetType().IsSubclassOf(t))
                     {
-                        slot.enabled = true;
+                        slot.gameObject.SetActive(true);
                     }
                     else
                     {
-                        slot.enabled = false;
+                        slot.gameObject.SetActive(false);
                     }
                 }
             }
