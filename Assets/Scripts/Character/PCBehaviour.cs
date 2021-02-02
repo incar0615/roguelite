@@ -6,6 +6,8 @@ using UnityEngine;
 namespace P1
 {
     using GameObjects;
+    using P1.Events;
+
     public class PCBehaviour : CharacterBehaviour
     {
         private Camera mainCam;

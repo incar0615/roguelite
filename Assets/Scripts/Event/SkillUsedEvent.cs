@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace P1
+namespace P1.Events
 {
     /// <summary>
     /// Base event for all EventManager events.
