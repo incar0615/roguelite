@@ -26,8 +26,6 @@ namespace P1
             return playerData;
         }
 
-        public Inventory inventory;
-
         private void OnEnable()
         {
             
@@ -50,12 +48,17 @@ namespace P1
             sprRenderer = GetComponent<SpriteRenderer>();
 
             // TODO 임시 코드 
-            inventory = new Inventory(new List<EquipmentItem>(), new List<ArtifactItem>(), new List<RuneItem>(), new Dictionary<EquipPart, EquipmentItem>()); ;
-
             Bracelet bracelet = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
-            DashRobe robe = new DashRobe(); 
-            inventory.SetEquippedItem(bracelet);
-            inventory.SetEquippedItem(robe);
+            Bracelet bracelet1 = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
+
+            DashRobe robe = new DashRobe();
+
+            Inventory.Instance.GetItem(bracelet);
+            Inventory.Instance.GetItem(bracelet1);
+            Inventory.Instance.GetItem(robe);
+
+            Inventory.Instance.EquipItem(bracelet);
+            Inventory.Instance.EquipItem(robe);
         }
 
         // Update is called once per frame
@@ -129,7 +132,7 @@ namespace P1
 
         public void UseEquippedItem(EquipPart part, Vector3 dir)
         {
-            inventory.GetEquippedItem(part).Use(gameObject, dir);
+            Inventory.Instance.GetEquippedItem(part).Use(gameObject, dir);
         }
 
         void FixedUpdate()
