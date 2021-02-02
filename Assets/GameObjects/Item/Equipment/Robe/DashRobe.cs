@@ -6,7 +6,7 @@ namespace P1
 {
     namespace GameObjects
     {
-        public class DashRobe : EquipmentItem
+        public class DashRobe : RobeBase
         {
             float speed = 11.0f;
 
