@@ -33,6 +33,16 @@ namespace P1
                 this.itemList = items;
                 this.equippedItemDict = equippedItems;
             }
+
+            public void GetItem(ItemBase item)
+            {
+                itemList.Add(item);
+
+                // XXX. FieldItem 인스턴스나, 상점에서 구입시 메시지 호출하는게 나을지도? 
+                // 수정시 InventoryUIController 순서 생각하고 수정해야함
+                EventManager.Instance.Raise(new ItemGetEvent(item));
+            }
+
             public List<ItemBase> GetItemList(Type t)
             {
                 List<ItemBase> list = new List<ItemBase>();
@@ -76,20 +86,27 @@ namespace P1
             /// 아이템 장착
             /// </summary>
             /// <param name="item"></param>
-            public void SetEquippedItem(EquipmentItem item)
+            public void EquipItem(EquipmentItem item)
             {
-                EquipmentItem equipItem;
-                if (equippedItemDict.TryGetValue(item.EquipPart, out equipItem))
+                EquipmentItem unequipment = null;
+                if (equippedItemDict.TryGetValue(item.EquipPart, out unequipment))
                 {
-                    // 장착된 아이템이 있을경우 장착 해제
-                    equipmentList.Add(equipItem);
                 }
 
                 equippedItemDict[item.EquipPart] = item;
-                equipmentList.Remove(item);
 
-                // TODO EventManager 머지 이후 스테이터스 갱신 처리 필요. 
+                EventManager.Instance.Raise(new ItemEquipEvent(item.EquipPart, item, unequipment));
+            }
 
+            public void UnequipItem(EquipPart part)
+            {
+                EquipmentItem unequippedItem;
+                if (equippedItemDict.TryGetValue(part, out unequippedItem))
+                {
+                    equippedItemDict[part] = null;
+                }
+
+                EventManager.Instance.Raise(new ItemEquipEvent(part, null, unequippedItem));
             }
         }
 
