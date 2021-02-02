@@ -11,6 +11,7 @@ namespace P1
     {
         public class Inventory
         {
+            #region singleton
             public static Inventory Instance
             {
                 get
@@ -24,6 +25,7 @@ namespace P1
                 }
             }
             private static Inventory instance = null;
+            #endregion
 
             List<ItemBase> itemList;
             Dictionary<EquipPart, EquipmentItem> equippedItemDict;

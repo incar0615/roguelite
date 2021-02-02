@@ -6,6 +6,7 @@ namespace P1
 {
     public class PoolManager : MonoBehaviour
     {
+        #region singleton
         private static PoolManager instance;
         public static PoolManager Instance
         {
@@ -31,7 +32,7 @@ namespace P1
                 instance = value;
             }
         }
-
+        #endregion
         [SerializeField]
         private GameObject projectilePrefap = null;
 

@@ -22,7 +22,7 @@ namespace P1
     /// </summary>
     public class EventManager
     {
-
+        #region singleton
         public static EventManager Instance
         {
             get
@@ -36,6 +36,7 @@ namespace P1
             }
         }
         private static EventManager instance = null;
+        #endregion
 
         public delegate void EventDelegate<T>(T e) where T : MessageEvent;
         private delegate void EventDelegate(MessageEvent e);

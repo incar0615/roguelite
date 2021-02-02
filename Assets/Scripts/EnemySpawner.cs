@@ -6,6 +6,7 @@ namespace P1
 {
     public class EnemySpawner : MonoBehaviour
     {
+        #region singleton
         private static EnemySpawner instance = null;
         public static EnemySpawner Instance
         {
@@ -22,6 +23,7 @@ namespace P1
                 return instance;
             }
         }
+        #endregion
 
         public void SpawnEnemy()
         {

@@ -6,8 +6,13 @@ using P1.GameObjects;
 
 namespace P1
 {
+    /// <summary>
+    /// 움직임 실행해줄 클래스
+    /// 코루틴을 사용하기 위해 MonoBehaviour 상속
+    /// </summary>
     public class MoveExecutor : MonoBehaviour
     {
+        #region singleton
         private static MoveExecutor instance;
         public static MoveExecutor Instance
         {
@@ -33,6 +38,7 @@ namespace P1
                 instance = value;
             }
         }
+        #endregion
 
         /// <summary>
         /// </summary>

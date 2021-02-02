@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace P1
 {
+    /// <summary>
+    /// 플레이어를 따라다닐 카메라
+    /// </summary>
     public class FollowingCamera : MonoBehaviour
     {
+        #region singleton
         private static FollowingCamera instance;
         public static FollowingCamera Instance
         {
@@ -31,6 +35,7 @@ namespace P1
                 instance = value;
             }
         }
+        #endregion
 
         public GameObject target;
         public RoomBehaviour currentRoom;
