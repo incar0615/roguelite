@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using P1.Events;
 
 namespace P1
@@ -9,20 +11,45 @@ namespace P1
     {
         public class Inventory
         {
-            List<EquipmentItem> equipmentList;
-            List<ArtifactItem> artifactList;
-            List<RuneItem> runeList;
+            public static Inventory Instance
+            {
+                get
+                {
+                    if (instance == null)
+                    {
+                        instance = LoadInventory();
+                    }
+
+                    return instance;
+                }
+            }
+            private static Inventory instance = null;
+
+            List<ItemBase> itemList;
             Dictionary<EquipPart, EquipmentItem> equippedItemDict;
 
-            public Inventory(List<EquipmentItem> equipmentItems, 
-                List<ArtifactItem> artifacts, 
-                List<RuneItem> runes, 
-                Dictionary<EquipPart, EquipmentItem> equippedItems)
+            public Inventory(List<ItemBase> items, Dictionary<EquipPart, EquipmentItem> equippedItems)
             {
-                equipmentList = equipmentItems;
-                artifactList = artifacts;
-                runeList = runes;
-                equippedItemDict = equippedItems;
+                this.itemList = items;
+                this.equippedItemDict = equippedItems;
+            }
+            public List<ItemBase> GetItemList(Type t)
+            {
+                List<ItemBase> list = new List<ItemBase>();
+
+                list = itemList.
+                    Where(item => (item.GetType() == t || item.GetType().IsSubclassOf(t))).
+                    ToList();
+
+                return list;
+            }
+
+            public static Inventory LoadInventory()
+            {
+                Inventory inven = new Inventory(new List<ItemBase>(), 
+                    new Dictionary<EquipPart, EquipmentItem>());
+
+                return inven;
             }
 
             /// <summary>
