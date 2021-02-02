@@ -17,7 +17,6 @@ namespace P1
 
             public override void Use(GameObject ownerObj, Vector3 dir)
             {
-                Debug.Log("cnt = " + (cnt++));
                 var bullet = PoolManager.GetProjectileObject();
 
                 bullet.GetAttackData().Atk = 4; // FIXME. 임시코드
