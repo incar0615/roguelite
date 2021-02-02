@@ -17,8 +17,10 @@ namespace P1.UI
         bool isEquipped = false;
         public bool IsEquipped { get => isEquipped; }
 
-        public ItemBase item;
+        [SerializeReference]
         public Image equipImg;
+
+        public ItemBase item;
 
         public void SetEquipped(bool isEquipped)
         {
@@ -32,19 +34,26 @@ namespace P1.UI
     {
         SerializedProperty itemId;
         SerializedProperty isEquipped;
+        SerializedProperty equipImg;
+
+        
         protected override void OnEnable()
         {
             base.OnEnable();
             itemId = serializedObject.FindProperty("itemId");
-            itemId = serializedObject.FindProperty("isEquipped");
+            isEquipped = serializedObject.FindProperty("isEquipped");
+            equipImg = serializedObject.FindProperty("equipImg");
         }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            EditorGUILayout.PropertyField(isEquipped); 
             EditorGUILayout.PropertyField(itemId);
-            
+            EditorGUILayout.PropertyField(isEquipped);
+            EditorGUILayout.PropertyField(equipImg);
+
+            serializedObject.ApplyModifiedProperties();
+
         }
     }
 }
