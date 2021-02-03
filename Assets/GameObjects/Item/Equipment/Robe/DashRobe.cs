@@ -13,6 +13,9 @@ namespace P1
             public DashRobe()
             {
                 EquipPart = EquipPart.Robe;
+
+                // 임시 경로 설정
+                ImgPath = "Image/Item/Robe";
             }
 
             public override void Use(GameObject ownerObj, Vector3 dir)

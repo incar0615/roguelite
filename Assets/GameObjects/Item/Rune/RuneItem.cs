@@ -8,6 +8,11 @@ namespace P1
     {
         public class RuneItem : ItemBase
         {
+            public RuneItem()
+            {
+                // 임시 경로 설정
+                ImgPath = "Image/Item/Rune";
+            }
         }
 
     }
