@@ -11,20 +11,20 @@ namespace P1
             private int magicId;
             public int MagicId { get { return magicId; } set { magicId = value; } }
 
-            private List<RuneItem> runeList;
-            public List<RuneItem> RuneList { get { return runeList; } set { runeList = value; } }
+            private List<RuneSocket> runeSockets;
+            public List<RuneSocket> RuneSockets { get { return runeSockets; } set { runeSockets = value; } }
 
             private Magic magic;
             public override void Use(GameObject ownerObj, Vector3 dir)
             {
-                if(magic != null) magic.Use(ownerObj, dir);
+                magic?.Use(ownerObj, dir);
             }
 
-            public Bracelet(int magicId, List<RuneItem> runes, EquipPart part)
+            public Bracelet(int magicId, List<RuneSocket> runeSockets, EquipPart part)
             {
                 EquipPart = part;
                 this.magicId = magicId;
-                runeList = runes;
+                this.runeSockets = runeSockets;
 
                 // 임시 경로 설정
                 ImgPath = "Image/Item/Bracelet";

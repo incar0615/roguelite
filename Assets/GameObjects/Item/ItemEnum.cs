@@ -20,6 +20,7 @@ namespace P1
             Bracelet_Right,
             Bracelet_Left,
             Scroll,
+            RuneSocket,
         }
 
         public enum RuneType

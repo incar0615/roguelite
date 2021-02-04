@@ -49,16 +49,26 @@ namespace P1
             sprRenderer = GetComponent<SpriteRenderer>();
 
             // TODO 임시 코드 
-            Bracelet bracelet = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
-            Bracelet bracelet1 = new Bracelet(1, new List<RuneItem>(), EquipPart.Bracelet_Left);
+            List<RuneSocket> leftRunes = new List<RuneSocket>();
+            leftRunes.Add(new RuneSocket(RuneType.Blue));
+            leftRunes.Add(new RuneSocket(RuneType.Red));
+            
+            List<RuneSocket> rightRunes = new List<RuneSocket>();
+            leftRunes.Add(new RuneSocket(RuneType.Green));
+            leftRunes.Add(new RuneSocket(RuneType.Green));
+            leftRunes.Add(new RuneSocket(RuneType.Blue));
+
+            Bracelet bracelet_left = new Bracelet(1, leftRunes, EquipPart.Bracelet_Left);
+            Bracelet bracelet_right = new Bracelet(1, rightRunes, EquipPart.Bracelet_Right);
 
             DashRobe robe = new DashRobe();
 
-            Inventory.Instance.GetItem(bracelet);
-            Inventory.Instance.GetItem(bracelet1);
+            Inventory.Instance.GetItem(bracelet_left);
+            Inventory.Instance.GetItem(bracelet_right);
             Inventory.Instance.GetItem(robe);
 
-            Inventory.Instance.EquipItem(bracelet);
+            Inventory.Instance.EquipItem(bracelet_left);
+            Inventory.Instance.EquipItem(bracelet_right);
             Inventory.Instance.EquipItem(robe);
         }
 
