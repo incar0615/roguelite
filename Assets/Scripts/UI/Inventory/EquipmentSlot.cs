@@ -12,12 +12,12 @@ namespace P1.UI
         [Header("EquipmentSlot Properties")]
 
         [SerializeField]
-        EquipPart part;
+        protected EquipPart part;
 
         public Image equipmentImg;
         public Text equipmentNameTxt;
 
-        public ItemBase item;
+        protected ItemBase item;
 
         public override void SubscribeEvents()
         {
@@ -29,13 +29,7 @@ namespace P1.UI
             EventManager.Instance.RemoveListener<ItemEquipEvent>(OnEquipmentChanged);
         }
 
-        private void Start()
-        {
-            
-            
-        }
-
-        void OnEquipmentChanged(ItemEquipEvent iee)
+        protected virtual void OnEquipmentChanged(ItemEquipEvent iee)
         {
             // 해당 부위가 아니면 리턴
             if (iee.part != part) return;
