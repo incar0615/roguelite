@@ -56,7 +56,7 @@ namespace P1.UI
                     }
                     else
                     {
-                        runeSocketSlotList[i].SetActiveSocket(true);
+                        runeSocketSlotList[i].SetActiveSocket(false);
                     }
                 }
 
