@@ -33,10 +33,10 @@ namespace P1
         private Stack<PoolObject> availableObjStack = new Stack<PoolObject>();
 
         PoolInfo poolInfo;
-
-        public Pool(string poolName, GameObject poolObjectPrefab, int initialCount, bool fixedSize)
+        public Transform parentTr;
+        public Pool(string poolName, GameObject poolObjectPrefab, int initialCount, bool fixedSize, Transform parent)
         {
-
+            parentTr = parent;
             poolInfo = new PoolInfo(poolName, poolObjectPrefab, initialCount, fixedSize);
             //populate the pool
             for (int index = 0; index < initialCount; index++)
@@ -49,6 +49,10 @@ namespace P1
         {
             //add to pool
             po.gameObject.SetActive(false);
+
+            // 하이어라키 뷰가 더러워져서 PoolManager 하위로 이동
+            po.transform.parent = parentTr;
+
             availableObjStack.Push(po);
             po.isPooled = true;
         }
@@ -174,9 +178,12 @@ namespace P1
         {
             foreach (PoolInfo currentPoolInfo in poolInfo)
             {
+                GameObject go = new GameObject(currentPoolInfo.poolName);
+                go.transform.parent = transform;
 
                 Pool pool = new Pool(currentPoolInfo.poolName, currentPoolInfo.prefab,
-                                     currentPoolInfo.poolSize, currentPoolInfo.fixedSize);
+                                     currentPoolInfo.poolSize, currentPoolInfo.fixedSize,
+                                     go.transform);
 
 
                 Debug.Log("Creating pool: " + currentPoolInfo.poolName);
