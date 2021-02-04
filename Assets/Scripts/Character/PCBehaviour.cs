@@ -54,9 +54,9 @@ namespace P1
             leftRunes.Add(new RuneSocket(RuneType.Red));
             
             List<RuneSocket> rightRunes = new List<RuneSocket>();
-            leftRunes.Add(new RuneSocket(RuneType.Green));
-            leftRunes.Add(new RuneSocket(RuneType.Green));
-            leftRunes.Add(new RuneSocket(RuneType.Blue));
+            rightRunes.Add(new RuneSocket(RuneType.Green));
+            rightRunes.Add(new RuneSocket(RuneType.Green));
+            rightRunes.Add(new RuneSocket(RuneType.Blue));
 
             Bracelet bracelet_left = new Bracelet(1, leftRunes, EquipPart.Bracelet_Left);
             Bracelet bracelet_right = new Bracelet(1, rightRunes, EquipPart.Bracelet_Right);
