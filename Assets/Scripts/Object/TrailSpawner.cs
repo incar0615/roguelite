@@ -23,6 +23,11 @@ public class TrailSpawner : PoolObject, P1.GameObjects.IAttackModifierObj
     {
         makeTrailCoroutine = StartCoroutine(MakeTrailRoutine());
     }
+
+    void OnDIsable()
+    {
+        StopCoroutine(makeTrailCoroutine);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +44,10 @@ public class TrailSpawner : PoolObject, P1.GameObjects.IAttackModifierObj
     {
         while(true)
         {
-            TrailObject trailObj = P1.PoolManager.Instance.GetObjectFromPool("TrailObject", transform.position, transform.rotation).GetComponent<TrailObject>(); ;
+            /// FIXME. TrailSpawner 같은 경우 PoolManager에서 Instance를 생성할때 OnEnable로 코루틴이 실행되므로 주의
+            TrailObject trailObj = PoolManager.Instance.GetObjectFromPool("TrailObject", transform.position, transform.rotation)?.GetComponent<TrailObject>(); ;
+
+            if (!trailObj) break;
 
             trailObj.Duration = duration;
 

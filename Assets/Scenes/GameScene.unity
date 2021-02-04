@@ -543,18 +543,15 @@ MonoBehaviour:
   poolInfo:
   - poolName: Projectile
     prefab: {fileID: 3889103751909962175, guid: fe1094a2d7f212f48af26a9a05f54629, type: 3}
-    poolObj: {fileID: -4382803390738971575, guid: fe1094a2d7f212f48af26a9a05f54629, type: 3}
-    poolSize: 100
-    fixedSize: 0
-  - poolName: TrailSpawner
-    prefab: {fileID: 7370092740248802047, guid: d981cc21a8d8a744e8180e1067647845, type: 3}
-    poolObj: {fileID: 2364491144530235940, guid: d981cc21a8d8a744e8180e1067647845, type: 3}
-    poolSize: 20
+    poolSize: 10
     fixedSize: 0
   - poolName: TrailObject
     prefab: {fileID: 3889103751909962175, guid: 463c60d82e3c9f94c8a297a76e2e9f69, type: 3}
-    poolObj: {fileID: 1995840768534929065, guid: 463c60d82e3c9f94c8a297a76e2e9f69, type: 3}
-    poolSize: 100
+    poolSize: 10
+    fixedSize: 0
+  - poolName: TrailSpawner
+    prefab: {fileID: 7370092740248802047, guid: d981cc21a8d8a744e8180e1067647845, type: 3}
+    poolSize: 10
     fixedSize: 0
 --- !u!4 &123526159
 Transform:
