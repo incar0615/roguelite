@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using P1;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrailObject : MonoBehaviour
+public class TrailObject : PoolObject
 {
     [SerializeField]
     private P1.GameObjects.Element element;
@@ -38,6 +39,6 @@ public class TrailObject : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
-        P1.PoolManager.ReturnObject(this);
+        P1.PoolManager.Instance.ReturnObjectToPool(this);
     }
 }

@@ -28,12 +28,11 @@ namespace P1
 
             for (int i = 0; i < splitCnt; i++)
             {
-                var bullet = PoolManager.GetProjectileObject();
+                ProjectileBehaviour bullet = PoolManager.Instance.GetObjectFromPool("ProjectileBehaviour", projectile.transform.position, 
+                    projectile.transform.rotation).GetComponent<ProjectileBehaviour>();
 
-                //Vector3 dir = MathUtil.V3Rotate(, startAngle + intervalAngle * i);
                 Vector3 dir = projectile.Direction.V3Rotate(startAngle + (intervalAngle * i));
 
-                bullet.transform.position = projectile.transform.position;
                 bullet.Shoot(dir.normalized, projectile.Magic, maxTravelDist, projectile.Depth + 1);
             }
         }
@@ -48,8 +47,9 @@ namespace P1
         {
             Vector3 dir = projectile.Direction.V3Rotate(angle);
 
-            var bullet = PoolManager.GetProjectileObject();
-            bullet.transform.position = projectile.transform.position;
+            ProjectileBehaviour bullet = PoolManager.Instance.GetObjectFromPool("ProjectileBehaviour", projectile.transform.position,
+                    projectile.transform.rotation).GetComponent<ProjectileBehaviour>();
+
             bullet.Shoot(dir.normalized, projectile.Magic, maxTravelDist, projectile.Depth + 1);
         }
 
@@ -63,11 +63,12 @@ namespace P1
         /// <param name="maxTravelDist"></param>
         public static void TrailShot(this ProjectileBehaviour projectile, GameObjects.Element element, float period, float duration, float maxTravelDist = -1)
         {
-            var bullet = PoolManager.GetProjectileObject();
-            var trailSpawner = PoolManager.GetTrailSpawner();
-
+            ProjectileBehaviour bullet = PoolManager.Instance.GetObjectFromPool("ProjectileBehaviour", projectile.transform.position,
+                    projectile.transform.rotation).GetComponent<ProjectileBehaviour>();
             bullet.transform.position = projectile.transform.position;
 
+            TrailSpawner trailSpawner = PoolManager.Instance.GetObjectFromPool("TrailSpawner", projectile.transform.position,
+                    projectile.transform.rotation).GetComponent<TrailSpawner>();
             trailSpawner.Element = element;
             trailSpawner.Period = period;
             trailSpawner.Duration = duration;

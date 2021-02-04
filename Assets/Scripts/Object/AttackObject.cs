@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace P1
 {
-    public abstract class AttackObject : MonoBehaviour
+    public abstract class AttackObject : PoolObject
     {
         // Start is called before the first frame update
         void Start()

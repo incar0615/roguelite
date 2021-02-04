@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using P1;
 
-public class TrailSpawner : MonoBehaviour, P1.GameObjects.IAttackModifierObj
+public class TrailSpawner : PoolObject, P1.GameObjects.IAttackModifierObj
 {
     [SerializeField]
     private P1.GameObjects.Element element;
@@ -38,10 +39,9 @@ public class TrailSpawner : MonoBehaviour, P1.GameObjects.IAttackModifierObj
     {
         while(true)
         {
-            var trailObj = P1.PoolManager.GetTrailObject();
+            TrailObject trailObj = P1.PoolManager.Instance.GetObjectFromPool("TrailObject", transform.position, transform.rotation).GetComponent<TrailObject>(); ;
 
             trailObj.Duration = duration;
-            trailObj.transform.position = transform.position;
 
             yield return new WaitForSeconds(period);
         }
@@ -49,6 +49,6 @@ public class TrailSpawner : MonoBehaviour, P1.GameObjects.IAttackModifierObj
     public void ReturnObject()
     {
         StopCoroutine(makeTrailCoroutine);
-        P1.PoolManager.ReturnObject(this);
+        PoolManager.Instance.ReturnObjectToPool(this);
     }
 }

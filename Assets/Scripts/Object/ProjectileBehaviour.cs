@@ -109,7 +109,7 @@ namespace P1
                 // XXX. SendMessage랑 비교
                 tr.GetComponent<P1.GameObjects.IAttackModifierObj>().ReturnObject();
             }
-            PoolManager.ReturnObject(this);
+            PoolManager.Instance.ReturnObjectToPool(this);
         }
 
         void ModChain()
@@ -133,7 +133,7 @@ namespace P1
                 default:
                     break;
             }
-            PoolManager.ReturnObject(this);
+            PoolManager.Instance.ReturnObjectToPool(this);
         }
 
         void Update()
@@ -147,7 +147,7 @@ namespace P1
             {
                 Debug.Log("최대 사거리 도달" + maxTravelDist);
 
-                //PoolManager.ReturnObject(this);
+                PoolManager.Instance.ReturnObjectToPool(this);
                 if (isActiveAndEnabled && projectileMods.Count > depth)
                 {
                     StopCoroutine(modChainRoutine);

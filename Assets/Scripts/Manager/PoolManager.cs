@@ -1,9 +1,126 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace P1
 {
+    /// <summary>
+    /// 기존 오브젝트 풀에서 확장성을 위해 
+    /// easy Object Pooling 참고해서 변경 
+    /// </summary>
+    /// 
+
+    [System.Serializable]
+    public class PoolInfo
+    {
+        public string poolName;
+        public GameObject prefab;
+        public int poolSize;
+        public bool fixedSize;
+        
+        public PoolInfo(string poolName, GameObject poolObjectPrefab, int initialCount, bool fixedSize)
+        {
+            this.poolName = poolName;
+            this.prefab = poolObjectPrefab;
+            this.poolSize = initialCount;
+            this.fixedSize = fixedSize;
+        }
+    }
+
+    class Pool
+    {
+        private Stack<PoolObject> availableObjStack = new Stack<PoolObject>();
+
+        PoolInfo poolInfo;
+
+        public Pool(string poolName, GameObject poolObjectPrefab, int initialCount, bool fixedSize)
+        {
+
+            poolInfo = new PoolInfo(poolName, poolObjectPrefab, initialCount, fixedSize);
+            //populate the pool
+            for (int index = 0; index < initialCount; index++)
+            {
+                AddObjectToPool(NewObjectInstance());
+            }
+        }
+
+        private void AddObjectToPool(PoolObject po)
+        {
+            //add to pool
+            po.gameObject.SetActive(false);
+            availableObjStack.Push(po);
+            po.isPooled = true;
+        }
+
+        private PoolObject NewObjectInstance()
+        {
+            GameObject go = (GameObject)GameObject.Instantiate(poolInfo.prefab);
+            PoolObject po = go.GetComponent<PoolObject>();
+            if (po == null)
+            {
+                po = go.AddComponent<PoolObject>();
+            }
+            //set name
+            po.poolName = poolInfo.poolName;
+            return po;
+        }
+
+        public GameObject NextAvailableObject(Vector3 position, Quaternion rotation)
+        {
+            PoolObject po = null;
+            if (availableObjStack.Count > 0)
+            {
+                po = availableObjStack.Pop();
+            }
+            else if (poolInfo.fixedSize == false)
+            {
+                //increment size var, this is for info purpose only
+                poolInfo.poolSize++;
+                Debug.Log(string.Format("Growing pool {0}. New size: {1}", poolInfo.poolName, poolInfo.poolSize));
+                //create new object
+                po = NewObjectInstance();
+            }
+            else
+            {
+                Debug.LogWarning("No object available & cannot grow pool: " + poolInfo.poolName);
+            }
+
+            GameObject result = null;
+            if (po != null)
+            {
+                po.isPooled = false;
+                result = po.gameObject;
+                result.SetActive(true);
+
+                result.transform.position = position;
+                result.transform.rotation = rotation;
+            }
+
+            return result;
+        }
+
+        public void ReturnObjectToPool(PoolObject po)
+        {
+
+            if (poolInfo.poolName.Equals(po.poolName))
+            {
+                if (!po.isPooled)
+                {
+                    Debug.LogWarning(po.gameObject.name + " is already in pool. Why are you trying to return it again? Check usage.");
+                }
+                else
+                {
+                    AddObjectToPool(po);
+                }
+
+            }
+            else
+            {
+                Debug.LogError(string.Format("Trying to add object to incorrect pool {0} {1}", po.poolName, poolInfo.poolName));
+            }
+        }
+    }
     public class PoolManager : MonoBehaviour
     {
         #region singleton
@@ -33,20 +150,9 @@ namespace P1
             }
         }
         #endregion
-        [SerializeField]
-        private GameObject projectilePrefap = null;
 
-        [SerializeField]
-        private GameObject trailSpawnerPrefap = null;
-
-        [SerializeField]
-        private GameObject trailObjectPrefap = null;
-
-
-        Queue<ProjectileBehaviour> projectileQue = new Queue<ProjectileBehaviour>();
-        Queue<TrailSpawner> trailSpawnerQue = new Queue<TrailSpawner>();
-        Queue<TrailObject> trailObjectQue = new Queue<TrailObject>();
-
+        public PoolInfo[] poolInfo;
+        private Dictionary<string, Pool> poolDictionary = new Dictionary<string, Pool>();
 
         private void Awake()
         {
@@ -61,154 +167,69 @@ namespace P1
 
             Instance = this;
 
-            Initialize(100);
+            CreatePools();
         }
 
-        void Initialize(int initCnt)
+        private void CreatePools()
         {
-            // Projectile
-            for (int i = 0; i < initCnt; i++)
+            foreach (PoolInfo currentPoolInfo in poolInfo)
             {
-                var newProjectile = Instantiate(projectilePrefap).GetComponent<ProjectileBehaviour>();
-                newProjectile.transform.SetParent(transform);
-                newProjectile.gameObject.SetActive(false);
 
-                projectileQue.Enqueue(newProjectile);
-            }
+                Pool pool = new Pool(currentPoolInfo.poolName, currentPoolInfo.prefab,
+                                     currentPoolInfo.poolSize, currentPoolInfo.fixedSize);
 
-            // TrailSpanwer
-            for (int i = 0; i < initCnt; i++)
-            {
-                var newTrail = Instantiate(trailSpawnerPrefap).GetComponent<TrailSpawner>();
-                newTrail.transform.SetParent(transform);
-                newTrail.gameObject.SetActive(false);
 
-                trailSpawnerQue.Enqueue(newTrail);
-            }
-
-            // TrailObject
-            for (int i = 0; i < initCnt * 5; i++)
-            {
-                var newTrail = Instantiate(trailObjectPrefap).GetComponent<TrailObject>();
-                newTrail.transform.SetParent(transform);
-                newTrail.gameObject.SetActive(false);
-
-                trailObjectQue.Enqueue(newTrail);
+                Debug.Log("Creating pool: " + currentPoolInfo.poolName);
+                //add to mapping dict
+                poolDictionary[currentPoolInfo.poolName] = pool;
             }
         }
 
-        // --------------------- projectilePrefap -------------------------------------------------------------------------
-        ProjectileBehaviour CreateNewProjectileObj()
+        public GameObject GetObjectFromPool(string poolName, Vector3 position, Quaternion rotation)
         {
-            var newObj = Instantiate(projectilePrefap).GetComponent<ProjectileBehaviour>();
-            newObj.transform.SetParent(transform);
-            newObj.gameObject.SetActive(false);
+            GameObject result = null;
 
-            return newObj;
-        }
-
-        public static ProjectileBehaviour GetProjectileObject()
-        {
-            if (Instance.projectileQue.Count > 1)
+            if (poolDictionary.ContainsKey(poolName))
             {
-                var obj = Instance.projectileQue.Dequeue();
-                obj.transform.SetParent(null);
-                obj.gameObject.SetActive(true);
+                Pool pool = poolDictionary[poolName];
+                result = pool.NextAvailableObject(position, rotation);
+                //scenario when no available object is found in pool
+                if (result == null)
+                {
+                    Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
+                }
 
-                return obj;
             }
             else
             {
-                var newObj = Instance.CreateNewProjectileObj();
-                newObj.transform.SetParent(null);
-                newObj.gameObject.SetActive(true);
-
-                return newObj;
+                Debug.LogError("Invalid pool name specified: " + poolName);
             }
+
+            return result;
         }
 
-        public static void ReturnObject(ProjectileBehaviour obj)
+        public void ReturnObjectToPool(GameObject go)
+        {
+            PoolObject po = go.GetComponent<PoolObject>();
+            
+            ReturnObjectToPool(po);
+        }
+
+        public void ReturnObjectToPool(PoolObject po)
         {
             
-            obj.gameObject.SetActive(false);
-
-            obj.transform.SetParent(Instance.transform);
-
-            Instance.projectileQue.Enqueue(obj);
-        }
-
-        // ---------------------- trailSpawnerPrefap --------------------------------------------------------------------
-        TrailSpawner CreateNewTrailSpawner()
-        {
-            var newObj = Instantiate(projectilePrefap).GetComponent<TrailSpawner>();
-            newObj.transform.SetParent(transform);
-            newObj.gameObject.SetActive(false);
-
-            return newObj;
-        }
-        public static TrailSpawner GetTrailSpawner()
-        {
-            if (Instance.trailSpawnerQue.Count > 1)
+            if (po != null)
             {
-                var obj = Instance.trailSpawnerQue.Dequeue();
-                obj.transform.SetParent(null);
-                obj.gameObject.SetActive(true);
-
-                return obj;
+                if (poolDictionary.ContainsKey(po.poolName))
+                {
+                    Pool pool = poolDictionary[po.poolName];
+                    pool.ReturnObjectToPool(po);
+                }
+                else
+                {
+                    Debug.LogWarning("No pool available with name: " + po.poolName);
+                }
             }
-            else
-            {
-                var newObj = Instance.CreateNewTrailSpawner();
-                newObj.transform.SetParent(null);
-                newObj.gameObject.SetActive(true);
-
-                return newObj;
-            }
-        }
-        public static void ReturnObject(TrailSpawner obj)
-        {
-            obj.gameObject.SetActive(false);
-
-            obj.transform.SetParent(Instance.transform);
-
-            Instance.trailSpawnerQue.Enqueue(obj);
-        }
-
-        // ---------------------- trailObjectPrefap --------------------------------------------------------------------
-        TrailObject CreateNewTrailObj()
-        {
-            var newObj = Instantiate(trailObjectPrefap).GetComponent<TrailObject>();
-            newObj.transform.SetParent(transform);
-            newObj.gameObject.SetActive(false);
-
-            return newObj;
-        }
-        public static TrailObject GetTrailObject()
-        {
-            if (Instance.trailObjectQue.Count > 1)
-            {
-                var obj = Instance.trailObjectQue.Dequeue();
-                obj.transform.SetParent(null);
-                obj.gameObject.SetActive(true);
-
-                return obj;
-            }
-            else
-            {
-                var newObj = Instance.CreateNewTrailObj();
-                newObj.transform.SetParent(null);
-                newObj.gameObject.SetActive(true);
-
-                return newObj;
-            }
-        }
-        public static void ReturnObject(TrailObject obj)
-        {
-            obj.gameObject.SetActive(false);
-
-            obj.transform.SetParent(Instance.transform);
-
-            Instance.trailObjectQue.Enqueue(obj);
         }
     }
 }
